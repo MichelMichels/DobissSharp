@@ -1,0 +1,6 @@
+{
+  "applicationName": "MichelMichels.DobissSharp",
+  "secretKey": "CHANGE_ME",
+  "endpoint": "http://dobiss.local",
+  "expirationDays": 7
+}
