@@ -31,7 +31,7 @@ foreach(var room in rooms)
     Console.ForegroundColor = ConsoleColor.White;
     foreach(var element in room.Elements)
     {
-        Console.WriteLine($"[{element.ModuleId}:{element.ChannelId}] Name: {element.Name}; Icon: {element.Type}");
+        Console.WriteLine($"[{element.ModuleId}:{element.ChannelId}] Name: {element.Name}; Device type: {element.DeviceType}");
     }
 
     Console.WriteLine();

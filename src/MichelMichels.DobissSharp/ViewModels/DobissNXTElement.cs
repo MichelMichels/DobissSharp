@@ -15,14 +15,14 @@ namespace MichelMichels.DobissSharp.ViewModels
             Name = subject.Name;
             ModuleId = subject.Address;
             ChannelId = subject.Channel;
-            Type = (NXTElementType)subject.Type;
-            Device = (DeviceType)subject.IconsId;
+            ElementType = (NXTElementType)subject.Type;
+            DeviceType = (DeviceType)subject.IconsId;
         }               
 
         public int ModuleId { get; set; }
         public int ChannelId { get; set; }
         public string Name { get; set; }
-        public NXTElementType Type { get; set; }
-        public DeviceType Device { get; set; }
+        public NXTElementType ElementType { get; set; }
+        public DeviceType DeviceType { get; set; }
     }
 }

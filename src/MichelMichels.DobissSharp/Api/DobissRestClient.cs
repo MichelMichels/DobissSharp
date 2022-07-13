@@ -1,7 +1,11 @@
-﻿using MichelMichels.DobissSharp.Models;
+﻿using MichelMichels.DobissSharp.Exceptions;
+using MichelMichels.DobissSharp.Models;
 using MichelMichels.DobissSharp.Services;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Net;
 
 namespace MichelMichels.DobissSharp.Api
 {
@@ -27,8 +31,22 @@ namespace MichelMichels.DobissSharp.Api
 
         // GET /api/local/discover
         public async Task<DiscoverResponse> Discover()
-        {
-            return await _restClient.GetJsonAsync<DiscoverResponse>("api/local/discover");
+        {            
+            var request = new RestRequest("api/local/discover");
+
+            try
+            {
+                var response = await _restClient.GetAsync(request);
+                return JsonSerializer.Deserialize<DiscoverResponse>(response.Content);
+            } catch(HttpRequestException hre)
+            {
+                if (hre.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new WrongSecretKeyException("Wrong secret key", hre);
+                }
+
+                throw;
+            }
         }
 
         // GET /api/local/status
