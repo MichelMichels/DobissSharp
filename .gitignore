@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # Added by Michel
-dobiss_settings.json
+**/dobiss_settings.json
