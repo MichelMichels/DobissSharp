@@ -23,6 +23,6 @@ namespace MichelMichels.DobissSharp.ViewModels
         public int ChannelId { get; set; }
         public string Name { get; set; }
         public NXTElementType ElementType { get; set; }
-        public DeviceType DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }       
     }
 }

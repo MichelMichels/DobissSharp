@@ -6,6 +6,7 @@ using RestSharp.Authenticators;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace MichelMichels.DobissSharp.Api
 {
@@ -37,7 +38,13 @@ namespace MichelMichels.DobissSharp.Api
             try
             {
                 var response = await _restClient.GetAsync(request);
-                return JsonSerializer.Deserialize<DiscoverResponse>(response.Content);
+                Debug.WriteLine($"GET /api/local/discover: {response.Content}");
+
+                var options = new JsonSerializerOptions()
+                {
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                };
+                return JsonSerializer.Deserialize<DiscoverResponse>(response.Content, options);
             } catch(HttpRequestException hre)
             {
                 if (hre.StatusCode == HttpStatusCode.Unauthorized)

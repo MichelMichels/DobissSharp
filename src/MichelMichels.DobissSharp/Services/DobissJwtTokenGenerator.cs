@@ -1,7 +1,6 @@
 ﻿using JWT;
 using JWT.Algorithms;
 using JWT.Serializers;
-using Microsoft.Extensions.Configuration;
 
 namespace MichelMichels.DobissSharp.Services
 {

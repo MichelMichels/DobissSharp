@@ -1,4 +1,5 @@
 ﻿using MichelMichels.DobissSharp.Api;
+using MichelMichels.DobissSharp.Comparers;
 using MichelMichels.DobissSharp.Models;
 using MichelMichels.DobissSharp.ViewModels;
 using System;
@@ -14,12 +15,14 @@ namespace MichelMichels.DobissSharp
         private readonly IDobissRestClient _client;
         private DiscoverResponse _discovery;
         private readonly List<IRoom> _rooms;
+        private readonly List<IDobissNXTElement> _elements;
         private bool _isInitialized;
 
         public DobissService(IDobissRestClient client)
         {
             _client = client;
             _rooms = new List<IRoom>();
+            _elements = new List<IDobissNXTElement>();
         }
 
         public async Task<List<IRoom>> GetRooms()
@@ -31,6 +34,15 @@ namespace MichelMichels.DobissSharp
 
             return _rooms;
         }
+        public async Task<List<IDobissNXTElement>> GetNXTElements()
+        {
+            if(!_isInitialized)
+            {
+                await Initialize();
+            }
+
+            return _elements;
+        }
 
         private async Task Initialize()
         {
@@ -39,12 +51,14 @@ namespace MichelMichels.DobissSharp
                 _discovery = await _client.Discover();
 
                 var distinctSubjects = _discovery.Groups
+                    .Where(x => x.GroupInfo.Id != 0)
                     .SelectMany(x => x.Subjects)
-                    .Distinct()
+                    .Distinct(new SubjectComparer())
                     .OrderBy(x => x.Address)
                     .ThenBy(x => x.Channel);
 
-                var nxtElements = distinctSubjects.Select(x => new DobissNXTElement(x)).ToList();
+                _elements.Clear();
+                _elements.AddRange(distinctSubjects.Select(x => new DobissNXTElement(x)).ToList());
 
                 foreach (var group in _discovery.Groups.Where(x => x.GroupInfo.Id != 0))
                 {
@@ -53,7 +67,7 @@ namespace MichelMichels.DobissSharp
 
                     foreach (var subject in group.Subjects)
                     {
-                        var nxtElement = nxtElements.FirstOrDefault(x => x.ModuleId == subject.Address && x.ChannelId == subject.Channel);
+                        var nxtElement = _elements.FirstOrDefault(x => x.ModuleId == subject.Address && x.ChannelId == subject.Channel);
                         if (nxtElement != null)
                         {
                             room.Elements.Add(nxtElement);

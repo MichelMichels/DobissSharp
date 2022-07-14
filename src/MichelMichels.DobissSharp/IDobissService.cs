@@ -10,5 +10,6 @@ namespace MichelMichels.DobissSharp
     public interface IDobissService
     {
         Task<List<IRoom>> GetRooms();
+        Task<List<IDobissNXTElement>> GetNXTElements();
     }
 }

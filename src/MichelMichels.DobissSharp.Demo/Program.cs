@@ -22,21 +22,25 @@ var task = host.RunAsync();
 var dobissService = host.Services.GetRequiredService<IDobissService>();
 
 var rooms = await dobissService.GetRooms();
+var elements = await dobissService.GetNXTElements();
 
-foreach(var room in rooms)
+foreach(var element in elements)
 {
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine($"{room.Name} ({room.Elements.Count})");
-
-    Console.ForegroundColor = ConsoleColor.White;
-    foreach(var element in room.Elements)
-    {
-        Console.WriteLine($"[{element.ModuleId}:{element.ChannelId}] Name: {element.Name}; Device type: {element.DeviceType}");
-    }
-
-    Console.WriteLine();
+    Console.WriteLine($"{element.ModuleId,-3} | {element.ChannelId,-3} | {element.DeviceType, -15 } | {element.Name,-20}");
 }
 
-Console.WriteLine(rooms);
+//foreach(var room in rooms)
+//{
+//    Console.ForegroundColor = ConsoleColor.Green;
+//    Console.WriteLine($"{room.Name} ({room.Elements.Count})");
+
+//    Console.ForegroundColor = ConsoleColor.White;
+//    foreach(var element in room.Elements)
+//    {
+//        Console.WriteLine($"[{element.ModuleId}:{element.ChannelId}] Name: {element.Name}; Device type: {element.DeviceType}");
+//    }
+
+//    Console.WriteLine();
+//}
 
 Console.ReadLine();
