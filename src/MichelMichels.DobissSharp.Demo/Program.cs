@@ -21,13 +21,13 @@ var task = host.RunAsync();
 
 var dobissService = host.Services.GetRequiredService<IDobissService>();
 
-var rooms = await dobissService.GetRooms();
 var elements = await dobissService.GetNXTElements();
 
-foreach(var element in elements)
+foreach (var element in elements)
 {
     Console.WriteLine($"{element.ModuleId,-3} | {element.ChannelId,-3} | {element.DeviceType, -15 } | {element.Name,-20}");
 }
+
 
 //foreach(var room in rooms)
 //{
