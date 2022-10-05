@@ -1,32 +1,19 @@
 ﻿using MichelMichels.DobissSharp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MichelMichels.DobissSharp.Services;
 
 namespace MichelMichels.DobissSharp.ViewModels
 {
-    public class Light : DobissNXTElement, ILight
+    public class Light : DobissNXTElement
     {
-        public Light(Subject subject) : base(subject)
-        {
+        private readonly IDobissLightController controller;
 
+        public Light(Subject subject, IDobissLightController controller) : base(subject)
+        {
+            this.controller = controller ?? throw new ArgumentNullException(nameof(controller));
         }
 
-        public void Toggle()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TurnOff()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TurnOn()
-        {
-            throw new NotImplementedException();
-        }
+        public void Toggle() => controller.Toggle(this);
+        public void TurnOff() => controller.TurnOff(this);
+        public void TurnOn() => controller.TurnOn(this);      
     }
 }

@@ -11,6 +11,7 @@ namespace MichelMichels.DobissSharp.Api
     {
         Task<DiscoverResponse> Discover();
         Task<StatusResponse> Status();
-        Task Action();
+        Task Status(int address, int channel);
+        Task Action(ActionRequest actionRequest);
     }
 }

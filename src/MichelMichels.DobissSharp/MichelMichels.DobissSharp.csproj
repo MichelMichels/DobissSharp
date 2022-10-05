@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="JWT" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="RestSharp" Version="108.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
   </ItemGroup>

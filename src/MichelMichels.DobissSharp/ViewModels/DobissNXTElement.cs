@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace MichelMichels.DobissSharp.ViewModels
 {
-    public class DobissNXTElement : IDobissNXTElement
+    public class DobissNXTElement
     {
         public DobissNXTElement(Subject subject)
         {
             Name = subject.Name;
-            ModuleId = subject.Address;
+            AddressId = subject.Address;
             ChannelId = subject.Channel;
             ElementType = (NXTElementType)subject.Type;
             DeviceType = (DeviceType)subject.IconsId;
         }               
 
-        public int ModuleId { get; set; }
+        public int AddressId { get; set; }
         public int ChannelId { get; set; }
         public string Name { get; set; }
         public NXTElementType ElementType { get; set; }
