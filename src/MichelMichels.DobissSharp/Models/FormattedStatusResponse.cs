@@ -1,14 +1,12 @@
-﻿namespace MichelMichels.DobissSharp.Models
-{
-    internal class FormattedStatusResponse
-    {
-        public FormattedStatusResponse(int addressId)
-        {
-            this.AddressId = addressId;
-            StatusByChannelId = new Dictionary<int, object>();
-        }
+﻿namespace MichelMichels.DobissSharp.Models;
 
-        public int AddressId { get; set; }
-        public Dictionary<int, object> StatusByChannelId { get; set; }
+internal class FormattedStatusResponse
+{
+    public FormattedStatusResponse(int addressId)
+    {
+        this.AddressId = addressId;
     }
+
+    public int AddressId { get; set; }
+    public Dictionary<int, object> StatusByChannelId { get; set; } = [];
 }

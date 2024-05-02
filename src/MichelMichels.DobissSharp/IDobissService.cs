@@ -1,12 +1,8 @@
-﻿using MichelMichels.DobissSharp.Models;
-using MichelMichels.DobissSharp.ViewModels;
+﻿namespace MichelMichels.DobissSharp;
 
-namespace MichelMichels.DobissSharp
+public interface IDobissService : IDobissLightController
 {
-    public interface IDobissService
-    {
-        Task<List<DobissGroup>> GetGroups();
-        Task<List<DobissNXTElement>> GetOutputs();
-        Task GetStatus(DobissNXTElement element);
-    }
+    Task<List<DobissGroup>> GetGroups();
+    Task<List<DobissElement>> GetOutputs();
+    Task GetStatus(DobissElement element);
 }

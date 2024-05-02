@@ -3,7 +3,6 @@ using MichelMichels.DobissSharp.Api.Models;
 using MichelMichels.DobissSharp.Comparers;
 using MichelMichels.DobissSharp.Enums;
 using MichelMichels.DobissSharp.Models;
-using MichelMichels.DobissSharp.ViewModels;
 using System.Text.Json;
 
 namespace MichelMichels.DobissSharp;
@@ -17,7 +16,7 @@ public class DobissService(
     private DateTime? lastUpdated;
     private DiscoverResponse? _discovery;
     private readonly List<DobissGroup> _groups = [];
-    private readonly List<DobissNXTElement> _elements = [];
+    private readonly List<DobissElement> _elements = [];
     private bool _isInitialized;
 
     public async Task<List<DobissGroup>> GetGroups()
@@ -25,39 +24,39 @@ public class DobissService(
         await Initialize();
         return _groups;
     }
-    public async Task<List<DobissNXTElement>> GetOutputs()
+    public async Task<List<DobissElement>> GetOutputs()
     {
         await Initialize();
         return _elements.Where(x => x.AddressId < 200).ToList();
     }
-    public async Task GetStatus(DobissNXTElement element)
+    public async Task<object> GetStatus(DobissElement element)
     {
         if (cachedFormattedStatusReponse.Count == 0 || lastUpdated is null || (DateTime.Now - lastUpdated.Value).TotalSeconds > 5)
         {
             await GetStatusAll();
         }
 
-        object status = cachedFormattedStatusReponse.First(x => x.AddressId == element.AddressId).StatusByChannelId[element.ChannelId];
+        return cachedFormattedStatusReponse.First(x => x.AddressId == element.AddressId).StatusByChannelId[element.ChannelId];
     }
+
     private async Task GetStatusAll()
     {
-        cachedFormattedStatusReponse ??= [];
+        cachedFormattedStatusReponse.Clear();
 
         StatusResponse statusResponse = await dobissClient.Status();
 
-        cachedFormattedStatusReponse.Clear();
-        foreach (var kvp in statusResponse.Statuses)
+        foreach (KeyValuePair<string, object> kvp in statusResponse.Statuses)
         {
-            var addressId = Convert.ToInt32(kvp.Key);
+            int addressId = Convert.ToInt32(kvp.Key);
             if (addressId >= 200)
             {
                 continue;
             }
 
-            var formattedStatusData = new FormattedStatusResponse(addressId);
+            FormattedStatusResponse formattedStatusData = new(addressId);
             try
             {
-                var array = JsonSerializer.Deserialize<List<int>>((JsonElement)kvp.Value);
+                List<int>? array = JsonSerializer.Deserialize<List<int>>((JsonElement)kvp.Value);
 
                 // TODO check if zero based indexing is right
                 for (int i = 0; i < array.Count; i++)
@@ -67,7 +66,7 @@ public class DobissService(
             }
             catch (JsonException)
             {
-                var dictionary = JsonSerializer.Deserialize<Dictionary<string, object>>((JsonElement)kvp.Value);
+                Dictionary<string, object>? dictionary = JsonSerializer.Deserialize<Dictionary<string, object>>((JsonElement)kvp.Value);
 
                 foreach (var channelKvp in dictionary)
                 {
@@ -80,7 +79,6 @@ public class DobissService(
 
         lastUpdated = DateTime.Now;
     }
-
     private async Task Initialize()
     {
         if (_discovery is not null || _isInitialized)
@@ -103,19 +101,19 @@ public class DobissService(
             distinctSubjects
             .Select(x =>
             {
-                return (DeviceType)x.IconsId switch
+                return (DobissDeviceType)x.IconsId switch
                 {
-                    _ => new DobissNXTElement(x),
+                    _ => new DobissElement(x),
                 };
             })
             .ToList());
 
         foreach (Group? group in _discovery.Groups.Where(x => x.GroupInfo is not null && x.GroupInfo.Id != 0))
         {
-            List<DobissNXTElement> elements = [];
+            List<DobissElement> elements = [];
             foreach (Subject subject in group.Subjects)
             {
-                DobissNXTElement? nxtElement = _elements.FirstOrDefault(x => x.AddressId == subject.Address && x.ChannelId == subject.Channel);
+                DobissElement? nxtElement = _elements.FirstOrDefault(x => x.AddressId == subject.Address && x.ChannelId == subject.Channel);
                 if (nxtElement is not null)
                 {
                     elements.Add(nxtElement);
@@ -128,5 +126,25 @@ public class DobissService(
         }
 
         _isInitialized = true;
+    }
+
+    Task IDobissService.GetStatus(DobissElement element)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task TurnOn(DobissLight light)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task TurnOff(DobissLight light)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Toggle(DobissLight light)
+    {
+        throw new NotImplementedException();
     }
 }
