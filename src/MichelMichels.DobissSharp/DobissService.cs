@@ -3,16 +3,17 @@ using MichelMichels.DobissSharp.Api.Models;
 using MichelMichels.DobissSharp.Comparers;
 using MichelMichels.DobissSharp.Enums;
 using MichelMichels.DobissSharp.Models;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace MichelMichels.DobissSharp;
 
 public class DobissService(
-    IDobissClient dobissClient) : IDobissService
+    IDobissClient dobissClient) : IDobissService, IDobissLightController
 {
     private readonly IDobissClient dobissClient = dobissClient ?? throw new ArgumentNullException(nameof(dobissClient));
 
-    private List<FormattedStatusResponse> cachedFormattedStatusReponse = [];
+    private readonly List<FormattedStatusResponse> cachedFormattedStatusReponse = [];
     private DateTime? lastUpdated;
     private DiscoverResponse? _discovery;
     private readonly List<DobissGroup> _groups = [];
@@ -33,13 +34,13 @@ public class DobissService(
     {
         if (cachedFormattedStatusReponse.Count == 0 || lastUpdated is null || (DateTime.Now - lastUpdated.Value).TotalSeconds > 5)
         {
-            await GetStatusAll();
+            await LoadStatusIntoCache();
         }
 
         return cachedFormattedStatusReponse.First(x => x.AddressId == element.AddressId).StatusByChannelId[element.ChannelId];
     }
 
-    private async Task GetStatusAll()
+    private async Task LoadStatusIntoCache()
     {
         cachedFormattedStatusReponse.Clear();
 
@@ -99,52 +100,77 @@ public class DobissService(
         _elements.Clear();
         _elements.AddRange(
             distinctSubjects
-            .Select(x =>
-            {
-                return (DobissDeviceType)x.IconsId switch
-                {
-                    _ => new DobissElement(x),
-                };
-            })
+            .Select(ConvertToDobissElement)
             .ToList());
 
-        foreach (Group? group in _discovery.Groups.Where(x => x.GroupInfo is not null && x.GroupInfo.Id != 0))
+        foreach (Group group in _discovery.Groups.Where(x => x.GroupInfo is not null && x.GroupInfo.Id != 0))
         {
-            List<DobissElement> elements = [];
+            DobissGroup dobissGroup = new(group.GroupInfo!.Name);
+
             foreach (Subject subject in group.Subjects)
             {
-                DobissElement? nxtElement = _elements.FirstOrDefault(x => x.AddressId == subject.Address && x.ChannelId == subject.Channel);
-                if (nxtElement is not null)
+                DobissElement? element = _elements.FirstOrDefault(x => x.AddressId == subject.Address && x.ChannelId == subject.Channel);
+                if (element is null)
                 {
-                    elements.Add(nxtElement);
+                    continue;
                 }
+
+                dobissGroup.Elements.Add(element);
             }
 
-            var addedGroup = new DobissGroup((string)group.GroupInfo!.Name, elements);
-            _groups.Add(addedGroup);
-
+            _groups.Add(dobissGroup);
         }
 
         _isInitialized = true;
     }
 
-    Task IDobissService.GetStatus(DobissElement element)
+    public async Task TurnOn(DobissLight light)
     {
-        throw new NotImplementedException();
+        ActionRequest request = GenerateActionRequest(light, ActionId.On);
+        ActionResponse response = await dobissClient.Action(request);
+
+        if (response.NewStatus != request.ActionId)
+        {
+            Debug.WriteLine($"New status not set!");
+        }
+    }
+    public async Task TurnOff(DobissLight light)
+    {
+        ActionRequest request = GenerateActionRequest(light, ActionId.Off);
+        ActionResponse response = await dobissClient.Action(request);
+
+        if (response.NewStatus != request.ActionId)
+        {
+            Debug.WriteLine($"New status not set!");
+        }
+    }
+    public async Task Toggle(DobissLight light)
+    {
+        ActionRequest request = GenerateActionRequest(light, ActionId.Toggle);
+        ActionResponse response = await dobissClient.Action(request);
+
+        if (response.NewStatus != request.ActionId)
+        {
+            Debug.WriteLine($"New status not set!");
+        }
     }
 
-    public Task TurnOn(DobissLight light)
+    private DobissElement ConvertToDobissElement(Subject subject)
     {
-        throw new NotImplementedException();
+        return (DobissDeviceType)subject.IconsId switch
+        {
+            DobissDeviceType.Light => new DobissLight(subject, this),
+            _ => new DobissElement(subject),
+        };
     }
 
-    public Task TurnOff(DobissLight light)
+    private static ActionRequest GenerateActionRequest(DobissElement element, int actionId)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task Toggle(DobissLight light)
-    {
-        throw new NotImplementedException();
+        return new ActionRequest()
+        {
+            ActionId = actionId,
+            AddressId = element.AddressId,
+            ChannelId = element.ChannelId,
+        };
     }
 }

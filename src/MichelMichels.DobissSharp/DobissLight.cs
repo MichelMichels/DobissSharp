@@ -2,9 +2,11 @@
 
 namespace MichelMichels.DobissSharp;
 
-public class DobissLight : DobissElement
+public class DobissLight(Subject subject, IDobissLightController controller) : DobissElement(subject)
 {
-    public DobissLight(Subject subject) : base(subject)
-    {
-    }
+    private readonly IDobissLightController controller = controller ?? throw new ArgumentNullException(nameof(controller));
+
+    public Task TurnOn() => controller.TurnOn(this);
+    public Task TurnOff() => controller.TurnOff(this);
+    public Task Toggle() => controller.Toggle(this);
 }

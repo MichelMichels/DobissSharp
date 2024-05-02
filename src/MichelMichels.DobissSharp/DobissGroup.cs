@@ -1,13 +1,7 @@
 ﻿namespace MichelMichels.DobissSharp;
 
-public class DobissGroup
+public class DobissGroup(string name)
 {
-    public DobissGroup(string name, List<DobissElement> elements)
-    {
-        Name = name;
-        Elements = elements;
-    }
-
-    public string Name { get; }
-    public List<DobissElement> Elements { get; }
+    public string Name { get; } = name;
+    public List<DobissElement> Elements { get; } = [];
 }

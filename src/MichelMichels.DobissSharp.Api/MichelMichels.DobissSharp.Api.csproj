@@ -4,10 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    
+    <Title>DobissSharp.Api</Title>
+    <Authors>Michel Michels</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+      - Release 1.0.0
+      - REST API fully implemented
+    </PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/MichelMichels/DobissSharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/MichelMichels/DobissSharp</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>dobiss rest api wrapper dobisssharp michel michels nxt fermax home automation</PackageTags>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JWT" Version="10.1.1" />

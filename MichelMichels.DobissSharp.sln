@@ -5,13 +5,14 @@ VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MichelMichels.DobissSharp", "src\MichelMichels.DobissSharp\MichelMichels.DobissSharp.csproj", "{2388BD84-C442-41A0-86C2-4381F9741906}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MichelMichels.DobissSharp.Api", "src\MichelMichels.DobissSharp.Api\MichelMichels.DobissSharp.Api.csproj", "{0732D74A-DC90-41E8-9FF6-73DD2C47E4AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MichelMichels.DobissSharp.Api", "src\MichelMichels.DobissSharp.Api\MichelMichels.DobissSharp.Api.csproj", "{0732D74A-DC90-41E8-9FF6-73DD2C47E4AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MichelMichels.DobissSharp.ApiTests", "tests\MichelMichels.DobissSharp.ApiTests\MichelMichels.DobissSharp.ApiTests.csproj", "{FA4E6CFB-56B6-4CA4-9E33-D34BC7428783}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MichelMichels.DobissSharp.ApiTests", "tests\MichelMichels.DobissSharp.ApiTests\MichelMichels.DobissSharp.ApiTests.csproj", "{FA4E6CFB-56B6-4CA4-9E33-D34BC7428783}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BDFB0B1-797E-4E9F-87C7-420EE96D7940}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

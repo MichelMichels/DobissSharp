@@ -1,8 +1,8 @@
 ﻿namespace MichelMichels.DobissSharp;
 
-public interface IDobissService : IDobissLightController
+public interface IDobissService
 {
     Task<List<DobissGroup>> GetGroups();
     Task<List<DobissElement>> GetOutputs();
-    Task GetStatus(DobissElement element);
+    Task<object> GetStatus(DobissElement element);
 }

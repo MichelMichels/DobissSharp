@@ -4,14 +4,27 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>DobissSharp</Title>
+    <Authors>Michel Michels</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>0.9.0-alpha</Version>
+    <PackageReleaseNotes>
+      - Release 0.9.0-alpha
+    </PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/MichelMichels/DobissSharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/MichelMichels/DobissSharp</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>dobiss wrapper dobisssharp michel michels nxt fermax home automation</PackageTags>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MichelMichels.DobissSharp.Api\MichelMichels.DobissSharp.Api.csproj" />
+    <ProjectReference
+      Include="..\MichelMichels.DobissSharp.Api\MichelMichels.DobissSharp.Api.csproj" />
   </ItemGroup>
 
 </Project>
